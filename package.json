@@ -11,10 +11,13 @@
     "url": "git+https://github.com/KRIZVEE/tinyapp.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Kashif Rizvee",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/KRIZVEE/tinyapp/issues"
   },
-  "homepage": "https://github.com/KRIZVEE/tinyapp#readme"
+  "homepage": "https://github.com/KRIZVEE/tinyapp#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
