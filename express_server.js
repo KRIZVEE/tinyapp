@@ -13,7 +13,11 @@ app.get("/", (req, res) => {
 
 app.get("/urls.json", (req, res) => {
   // we are seeing the urlDB object as a string in the browser
-  res.json(urlDatabase.b2xVn2)
+  res.json(urlDatabase)
+})
+
+app.get("/hello", (req, res) => {
+  res.send("<html><body>Hello <b>World</b></body></html>\n")
 })
 
 app.listen(PORT, () => {
