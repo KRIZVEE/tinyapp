@@ -32,10 +32,7 @@ app.get("/urls/new", (req, res) => {
 })
 
 app.get("/urls/:shortURL", (req, res) => {
-  console.log(Object.keys(req));
-  console.log(req.params);
   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
-  console.log(templateVars);
   res.render("urls_show", templateVars);
 });
 
@@ -43,14 +40,19 @@ app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n")
 })
 
-app.post("/urls", (req, res) => {
-  console.log(req.body); //Log the post request body to the console
-  res.send("Ok")
-})
-
 function generateRandomString() {
   return Math.random().toString(36).slice(7);
 }
+
+app.post("/urls", (req, res) => {
+  let shortURL = generateRandomString();
+  urlDatabase[shortURL] = req.body.longURL;
+  res.redirect(`/urls/${shortURL}`)
+});
+
+
+
+
 
 
 // the below code will not work as variable a is accessible only within /set page and not under /fetch page
