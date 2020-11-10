@@ -48,6 +48,9 @@ app.post("/urls", (req, res) => {
   res.send("Ok")
 })
 
+function generateRandomString() {
+  return Math.random().toString(36).slice(7);
+}
 
 
 // the below code will not work as variable a is accessible only within /set page and not under /fetch page
