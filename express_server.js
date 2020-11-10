@@ -3,7 +3,7 @@ const app = express();
 const PORT = 8080; // default port 8080
 
 // this tells the express app to use EJS as its templating engine
-app.set("view engine", ejs)
+app.set("view engine", "ejs")
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -18,6 +18,11 @@ app.get("/urls.json", (req, res) => {
   // we are seeing the urlDB object as a string in the browser. So stringy is happening here by express automatically when calling .json method
   res.json(urlDatabase)
 })
+
+  app.get("/urls", (req, res) => {
+    const templateVars = { urls: urlDatabase };
+    res.render("urls_index", templateVars)
+  })
 
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n")
