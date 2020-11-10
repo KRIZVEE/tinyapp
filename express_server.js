@@ -31,13 +31,9 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new")
 })
 
-app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
-  res.render("urls_show", templateVars);
-});
 
 app.get("/u/:shortURL", (req, res) => {
- const longURL = urlDatabase[req.params.shortURL]
+  const longURL = urlDatabase[req.params.shortURL]
   res.redirect(longURL);
 });
 
@@ -55,10 +51,16 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${shortURL}`)
 });
 
+app.post(`/urls/:shortURL/delete`, (req, res) => {
+  delete urlDatabase[req.params.shortURL]
+  res.redirect("/urls")
+})
 
 
-
-
+app.get("/urls/:shortURL", (req, res) => {
+  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
+  res.render("urls_show", templateVars);
+});
 
 // the below code will not work as variable a is accessible only within /set page and not under /fetch page
 /*
