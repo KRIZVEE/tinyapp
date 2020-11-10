@@ -24,6 +24,10 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars)
 })
 
+app.get("/urls/new", (req, res) => {
+  res.render("urls_new")
+})
+
 app.get("/urls/:shortURL", (req, res) => {
   console.log(Object.keys(req));
   console.log(req.params);
@@ -35,6 +39,8 @@ app.get("/urls/:shortURL", (req, res) => {
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n")
 })
+
+
 
 // the below code will not work as variable a is accessible only within /set page and not under /fetch page
 /*
