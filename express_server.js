@@ -20,7 +20,7 @@ const users = {
   "userRandomId" : {
     id: "userRandomId",
     email: "user@example.com",
-    password: "purple-monkey-dinosaur"
+    password: "abcd"
   },
   "user2RandomId" : {
     id: "user2RandomId",
@@ -107,10 +107,37 @@ app.post("/login", (req, res) => {
   // let usr_id = ''
   // console.log('users', users);
   // console.log('req.body.email ',req.body.email);
+  let isEmailPresent = false;
+  let isPasswordMatching = false;
   for ( let key in users){
-    if(users[key].email === req.body.email ){
-      randId=users[key].id
+    // console.log('-----line 113 ---------');
+    // console.log('---++++++--req.body ----++++++-----', req.body);
+    // console.log('-----users[key].email ---------', users[key].email);
+    if(users[key].email === req.body.email){
+      // console.log('+++ inside line 117 +++++');
+      isEmailPresent = true;
+      // console.log('========== line 109 ===========');
+      // console.log('==========  req.body.password ===========', req.body.password);
+      if(users[key].email === req.body.email && users[key].password === req.body.password ){
+        isPasswordMatching = true;
+        randId=users[key].id
+        // console.log('******** line 109 ===========');
+      // console.log('==========  req.body.password ===========', req.body.password);
+      // console.log('==========  randId ===========', randId);
+      }
+
     }
+  }
+  // console.log('----line 126 ----');
+  // console.log('----isEmailPresent----', isEmailPresent);
+  // console.log('---- isPasswordMatching ----', isPasswordMatching);
+  if(!isEmailPresent){
+    res.status(403);
+    res.send('Response : Failure due to missing of existing-email in login page')
+  }
+  if(!isPasswordMatching){
+    res.status(403);
+    res.send('Response : Failure due to password mismatch in login page')
   }
   res.cookie('user_id', randId);
   res.redirect("/urls")
@@ -151,8 +178,8 @@ const checkExistingEmail = function(email) {
 }
 
 app.post('/register', (req, res) => {
-  console.log('req.body.email',req.body.email);
-  console.log('req.body.password',req.body.password);
+  // console.log('req.body.email',req.body.email);
+  // console.log('req.body.password',req.body.password);
  
   if(req.body.email === '' || req.body.password === '')
   {
