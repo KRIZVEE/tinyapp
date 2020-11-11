@@ -2,6 +2,7 @@ const express = require("express");
 const cookieParser = require('cookie-parser')
 const app = express();
 const PORT = 8080; // default port 8080
+let randId = ''
 
 // this tells the express app to use EJS as its templating engine
 app.set("view engine", "ejs")
@@ -15,6 +16,19 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 }
 
+const users = {
+  "userRandomId" : {
+    id: "userRandomId",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+  "user2RandomId" : {
+    id: "user2RandomId",
+    email: "user2@example.com",
+    password: "purple-2-monkey-dinosaur"
+  }
+}
+
 app.get("/", (req, res) => {
   res.send("Hello!")
 })
@@ -25,13 +39,30 @@ app.get("/urls.json", (req, res) => {
 })
 
 app.get("/urls", (req, res) => {
-  const templateVars = { username: req.cookies['username'], urls: urlDatabase };
+  // console.log('---inside /urls -------');
+  // console.log('id : ', randId);
+  // console.log('---inside /urls -------');
+  for ( let key in users){
+    if(key === randId){
+      randId = users[key]
+    }
+  }
+  // console.log('new rand id : ', randId);
+
+  const templateVars = { user_id: randId, urls: urlDatabase };
+  // const templateVars = { username: req.cookies['username'], urls: urlDatabase };
+  // console.log('templateVars : ',templateVars);
   res.render("urls_index", templateVars)
 })
 
 app.get("/urls/new", (req, res) => {
-  const templateVars = { username: req.cookies['username'] };
-
+  for ( let key in users){
+    if(key === randId){
+      randId = users[key]
+    }
+  }
+  const templateVars = { user_id: randId };
+  // const templateVars = { username: req.cookies['username'] };
   res.render("urls_new",templateVars)
 })
 
@@ -73,17 +104,68 @@ app.post("/login", (req, res) => {
 })
 
 app.post("/logout", (req, res) => {
-  res.clearCookie('username'); //res.clearCookie('name'
+  res.clearCookie('user_id'); //res.clearCookie('name'
   // res.cookie('username', req.body.username);
-  res.redirect("/urls")
+  res.redirect("/register")
 })
 
-
 app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = { username: req.cookies['username'], shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
+
+  for ( let key in users){
+    if(key === randId){
+      randId = users[key]
+    }
+  }
+  const templateVars = { user_id: randId, shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
+  // const templateVars = { username: req.cookies['username'], shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
   // console.log(templateVars);
   res.render("urls_show", templateVars);
 });
+
+app.get("/register", (req, res) => {
+  res.render("urls_register")
+})
+
+const checkExistingEmail = function(email) {
+  console.log('users : ',users);
+  console.log('incoming email : ', email);
+  for ( let key in users){
+    if(users[key].email === email ){
+      return email
+    }
+  }
+  return false
+}
+
+app.post('/register', (req, res) => {
+  console.log('req.body.email',req.body.email);
+  console.log('req.body.password',req.body.password);
+ 
+  if(req.body.email === '' || req.body.password === '')
+  {
+    res.status(400);
+    res.send('Response : Failure due to missing user-email / password')
+  }else if(req.body.email === checkExistingEmail(req.body.email)){
+    res.status(400);
+    res.send('Response : Failure due to existing email')
+  }
+  else{
+    randId = generateRandomString();
+    users[randId] = {
+      id: randId,
+      email: req.body.email,
+      password: req.body.password
+    }
+    // console.log('---inside app.post -------');
+    // console.log('random id : ',randId);
+    // console.log('users.id : ',users[randId].id);
+    // console.log('+++++');
+    // console.log(users)
+    // console.log('+++++');
+    res.cookie('user_id',randId)
+    res.redirect("/urls")
+  }
+})
 
 // the below code will not work as variable a is accessible only within /set page and not under /fetch page
 /*
