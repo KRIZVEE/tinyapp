@@ -99,38 +99,17 @@ app.post("/urls/:shortURL", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  // console.log('------line 102------');
-  // console.log('req.body', req.body);
-  // req.body { email: 'user@example.com',
-  // 'password style=': 'purple-monkey-dinosaur' }
-  // res.cookie('user_id',randId)
-  // let usr_id = ''
-  // console.log('users', users);
-  // console.log('req.body.email ',req.body.email);
   let isEmailPresent = false;
   let isPasswordMatching = false;
   for ( let key in users){
-    // console.log('-----line 113 ---------');
-    // console.log('---++++++--req.body ----++++++-----', req.body);
-    // console.log('-----users[key].email ---------', users[key].email);
     if(users[key].email === req.body.email){
-      // console.log('+++ inside line 117 +++++');
       isEmailPresent = true;
-      // console.log('========== line 109 ===========');
-      // console.log('==========  req.body.password ===========', req.body.password);
       if(users[key].email === req.body.email && users[key].password === req.body.password ){
         isPasswordMatching = true;
         randId=users[key].id
-        // console.log('******** line 109 ===========');
-      // console.log('==========  req.body.password ===========', req.body.password);
-      // console.log('==========  randId ===========', randId);
       }
-
     }
   }
-  // console.log('----line 126 ----');
-  // console.log('----isEmailPresent----', isEmailPresent);
-  // console.log('---- isPasswordMatching ----', isPasswordMatching);
   if(!isEmailPresent){
     res.status(403);
     res.send('Response : Failure due to missing of existing-email in login page')
@@ -144,9 +123,13 @@ app.post("/login", (req, res) => {
 })
 
 app.post("/logout", (req, res) => {
-  res.clearCookie('user_id'); //res.clearCookie('name'
-  // res.cookie('username', req.body.username);
+  console.log('b4 clearing REQUEST cookie : ', req.cookies);
+  console.log('b4 clearing response cookie : ', res.cookies);
+  res.clearCookie('user_id'); 
+  console.log('after clearing REQUEST cookie : ', req.cookies);
+  console.log('after clearing response cookie : ', res.cookies);
   res.redirect("/register")
+
 })
 
 app.get("/urls/:shortURL", (req, res) => {
@@ -163,7 +146,15 @@ app.get("/urls/:shortURL", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  res.render("urls_register")
+  randId=''
+  // console.log(templateVars);
+  // for ( let key in users){
+  //   if(key === randId){
+  //     randId = users[key]
+  //   }
+  // }
+  const templateVars = { user_id: randId };
+  res.render("urls_register",templateVars)
 })
 
 const checkExistingEmail = function(email) {
@@ -208,7 +199,13 @@ app.post('/register', (req, res) => {
 })
 
 app.get('/login', (req, res) => {
-  res.render('urls_login')
+  for ( let key in users){
+    if(key === randId){
+      randId = users[key]
+    }
+  }
+  const templateVars = { user_id: randId };
+  res.render("urls_login",templateVars)
 })
 
 // the below code will not work as variable a is accessible only within /set page and not under /fetch page

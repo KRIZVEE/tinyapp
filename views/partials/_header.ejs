@@ -8,30 +8,21 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
-        <a class="nav-item nav-link" href="/urls/new">Create New URL</a>        
-            <%if(user_id) {%>
-              <form class="form-inline" action="/logout" method="POST">
-                <div class="form-group mb-2">
-              <label for="longURL">Logged In As: TinyApp <%=user_id.email%>!</label>
+        <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
+        <%if(user_id) {%>
+          *********<%=user_id%>*****
+        <form class="form-inline" action="/logout" method="POST">
+          <div class="form-group mb-2">
+            <label for="longURL">Logged In As: TinyApp <%=user_id.email%>!</label>
             <button type="submit" class="btn btn-primary">Logout</button>
           </div>
         </form>
-            <%}else{%>
-
-              <form class="form-inline" action="/register" method="POST">
-                <!-- <div class="form-group mb-2">
-                  <input class="form-control" type="text" name="username" placeholder="username"
-                  style="width: 300px; margin: 1em"> -->
-                <button type="submit" class="btn btn-primary">Register</button>
-          <!-- </div> -->
+        <%}else{%>
+        <form class="form-inline" action="/register" method="POST">
+          <button type="submit" class="btn btn-primary">Register</button>
         </form>
-
-              <form class="form-inline" action="/login" method="POST">
-                <!-- <div class="form-group mb-2">
-                  <input class="form-control" type="text" name="username" placeholder="username"
-                  style="width: 300px; margin: 1em"> -->
-                <button type="submit" class="btn btn-primary">Login</button>
-          <!-- </div> -->
+        <form class="form-inline" action="/login" method="POST">
+          <button type="submit" class="btn btn-primary">Login</button>
         </form>
         <%}%>          
       </div>
