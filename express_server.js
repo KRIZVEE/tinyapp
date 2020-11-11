@@ -167,6 +167,10 @@ app.post('/register', (req, res) => {
   }
 })
 
+app.get('/login', (req, res) => {
+  res.render('urls_login')
+})
+
 // the below code will not work as variable a is accessible only within /set page and not under /fetch page
 /*
 app.get("/set", (req, res) => {
