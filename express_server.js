@@ -80,7 +80,6 @@ app.post("/logout", (req, res) => {
 
 
 app.get("/urls/:shortURL", (req, res) => {
-  // console.log((req.body));
   const templateVars = { username: req.cookies['username'], shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
   // console.log(templateVars);
   res.render("urls_show", templateVars);
