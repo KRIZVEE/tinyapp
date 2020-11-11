@@ -99,7 +99,20 @@ app.post("/urls/:shortURL", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  res.cookie('username', req.body.username);
+  // console.log('------line 102------');
+  // console.log('req.body', req.body);
+  // req.body { email: 'user@example.com',
+  // 'password style=': 'purple-monkey-dinosaur' }
+  // res.cookie('user_id',randId)
+  // let usr_id = ''
+  // console.log('users', users);
+  // console.log('req.body.email ',req.body.email);
+  for ( let key in users){
+    if(users[key].email === req.body.email ){
+      randId=users[key].id
+    }
+  }
+  res.cookie('user_id', randId);
   res.redirect("/urls")
 })
 
@@ -127,8 +140,8 @@ app.get("/register", (req, res) => {
 })
 
 const checkExistingEmail = function(email) {
-  console.log('users : ',users);
-  console.log('incoming email : ', email);
+  // console.log('users : ',users);
+  // console.log('incoming email : ', email);
   for ( let key in users){
     if(users[key].email === email ){
       return email
