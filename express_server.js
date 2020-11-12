@@ -2,6 +2,8 @@ const express = require("express");
 const cookieParser = require('cookie-parser');
 const bodyParser = require("body-parser");
 const bcrypt = require('bcrypt')
+// const popup = require('popups');
+
 const app = express();
 const PORT = 8080; // default port 8080
 
@@ -28,17 +30,20 @@ const users = {
   "userRandomId": {
     id: "userRandomId",
     email: "user@example.com",
-    password: "abcd"
+    password: "$2b$10$PDRvV0xE0mb7q.ZJyYSVkOTZ7Hl7IvMHhA71dRKuH3sb6ZgBSjS8O"
+    //abcd
   },
   "user2RandomId": {
     id: "user2RandomId",
     email: "user2@example.com",
-    password: "purple-2-monkey-dinosaur"
+    password: "$2b$10$8pifghKwvIw1RzgSVO3gseCRLJjHbt1II4Zi/zdDkIbQ6Rkf83Nu6"    
+    //purple-2-monkey-dinosaur
   },
   "ksf123": {
     id: "ksf123",
     email: "kashifrizvee",
-    password: "simaab5amir"
+    password: "$2b$10$7R7GZbxo6LAIFMaLXt0qlOMdt5QA4.GPIp4yKfJGp4D.ckLDdqolS"
+    // password: "simaab5amir"
   }
 };
 
@@ -64,10 +69,13 @@ const urlsForUser = function(id) {
   }
   return resUrls;
 }
+//    // bcrypt.compareSync("pink-donkey-minotaur", hashedPassword); // returns false
 
 const isEmailPasswordMatches = function (email, password) {
+  console.log('---line 71---');
+  console.log('password : ',password);
   for (let key in users) {
-    if (users[key].email === email && users[key].password === password) {
+    if (users[key].email === email && bcrypt.compareSync(password,users[key].password)){
       return true;
     }
   }
@@ -99,15 +107,20 @@ app.get("/urls", (req, res) => {              // *** DONE *** //
       urls: urlsUserId
       // urls: urlNewDatabase
     };
+    res.render("urls_index", templateVars);
+
   } else {
 
     // let guestUserPrompt = Window.
     // res.send('Please login or register first if you want to see the tiny urls')
     // window.alert('5');
+  //   popup.alert({
+  //     content: 'Please login or register first if you want to see the tiny urls!'
+  // });
     let userId = '';
+
     res.render("urls_login", { userId });
   }
-  res.render("urls_index", templateVars);
 });
 
 app.get('/login', (req, res) => {              // *** DONE *** //
@@ -176,8 +189,12 @@ app.post('/register', (req, res) => {              // *** DONE *** //
     users[userRandId] = {
       id: userRandId,
       email,
-      password
+      password : bcrypt.hashSync(password,10)
     };
+    console.log('+++++++++');
+    console.log(' new user : ',users[userRandId]);
+    console.log('+++++++++');
+
     res.cookie('userId', userRandId);
     res.redirect('/urls');
   }
@@ -191,6 +208,7 @@ app.post("/login", (req, res) => {              // *** DONE *** //
   if (req.body.email === '' || req.body.password === '') {
     res.status(400);
     res.send('Response : Failure due to missing email or password');
+
   } else if (isEmailPasswordMatches(email, password)) {
     console.log('-----inside line 169------');
     let userId = '';
@@ -232,6 +250,7 @@ app.post("/urls/new", (req, res) => {              // *** DONE *** //
 
 app.post(`/urls/:shortURL/delete`, (req, res) => {              // *** DONE *** //
   if(req.cookies.userId){
+  console.log('line 236');
   delete urlNewDatabase[req.params.shortURL];
   res.redirect("/urls");
 }

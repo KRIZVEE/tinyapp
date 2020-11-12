@@ -2,9 +2,11 @@
 
 2. /u/: id
 
-3. windiw pop-up message
+3. windiw pop-up message  [ need to work on it]
 
 4. on urls page do i need to show everything or should i show urls respective to logged in users
 
-5. Users Can Only Edit or Delete Their Own URLs
-curl -X POST -i localhost:8080/urls/b2xVn2/delete
+5. Users Can Only Edit or Delete Their Own URLs [ need to work on edit by different user]
+curl -X POST -i localhost:8080/urls/xyz345/delete
+
+kashifrizvee1234 | abcd1234
