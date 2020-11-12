@@ -5,10 +5,10 @@ const generateRandomString = function () {
   return Math.random().toString(36).slice(7);
 };
 
-const checkEmailExistance = function (email) {
-  for (let item in users) {
+const getUserByEmail = function (email, userDb) {
+  for (let item in userDb) {
     if (users[item].email === email) {
-      return true;
+      return users[item].id;
     }
   }
   return false;
@@ -33,4 +33,4 @@ const isEmailPasswordMatches = function (email, password) {
   return false;
 };
 
-module.exports = {generateRandomString, checkEmailExistance, urlsForUser, isEmailPasswordMatches, bcrypt}
+module.exports = {generateRandomString, getUserByEmail, urlsForUser, isEmailPasswordMatches, bcrypt}

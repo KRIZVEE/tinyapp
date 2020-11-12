@@ -3,7 +3,7 @@ const cookieSession = require('cookie-session')
 const bodyParser = require("body-parser");
 const { 
         generateRandomString, 
-        checkEmailExistance, 
+        getUserByEmail, 
         urlsForUser, 
         isEmailPasswordMatches,
         bcrypt
@@ -106,7 +106,7 @@ app.get("/urls/:shortURL", (req, res) => {              // *** DONE *** //
 
 app.post('/register', (req, res) => {              // *** DONE *** //
   console.log('---req.body---', req.body);
-  let isEmailExist = checkEmailExistance(req.body.email);
+  let isEmailExist = getUserByEmail(req.body.email, users);
   if (isEmailExist) {
     res.status(400);
     res.send('Response : Failure due to user email already exists. Please login');
