@@ -18,6 +18,9 @@ const urlNewDatabase = {
   'b2xVn2': { longURL: "https://www.tsn.ca", userID: "userRandomId" },
   '9sm5xK': { longURL: "https://www.google.ca", userID: "user2RandomId" },
   'abc123': { longURL: "https://www.bing.ca", userID: "ksf123" },
+  'pqr456': { longURL: "https://www.yahoo.ca", userID: "ksf123" },
+  'xyz345': { longURL: "https://www.ibm.ca", userID: "ksf123" },
+  'jkl789': { longURL: "https://www.apple.ca", userID: "userRandomId" },
 };
 
 const users = {
@@ -38,11 +41,11 @@ const users = {
   }
 };
 
-const generateRandomString = function() {
+const generateRandomString = function () {
   return Math.random().toString(36).slice(7);
 };
 
-const checkEmailExistance = function(email) {
+const checkEmailExistance = function (email) {
   for (let item in users) {
     if (users[item].email === email) {
       return true;
@@ -51,7 +54,17 @@ const checkEmailExistance = function(email) {
   return false;
 };
 
-const isEmailPasswordMatches = function(email, password) {
+const urlsForUser = function(id) {
+  let resUrls = {};
+  for(let key in urlNewDatabase) {    
+    if(id === urlNewDatabase[key].userID){
+      resUrls[key] = {longURL: urlNewDatabase[key].longURL, userID: id}
+    }
+  }
+  return resUrls;
+}
+
+const isEmailPasswordMatches = function (email, password) {
   for (let key in users) {
     if (users[key].email === email && users[key].password === password) {
       return true;
@@ -72,21 +85,26 @@ app.get("/register", (req, res) => {           // *** DONE *** //
   res.render("urls_register", { userId });
 });
 
+
 app.get("/urls", (req, res) => {              // *** DONE *** //
   let templateVars = '';
   if (req.cookies.userId) {
+    let currentUserId = req.cookies.userId;    
+    let urlsUserId = urlsForUser(currentUserId);
+    // console.log(' urlsUserId : ', urlsUserId);
     templateVars = {
       userId: req.cookies.userId,
       email: users[req.cookies.userId].email,
-      // urls: urlDatabase
-      urls: urlNewDatabase
+      urls: urlsUserId
+      // urls: urlNewDatabase
     };
   } else {
-    templateVars = {
-      userId: '',
-      // urls: urlDatabase
-      urls: urlNewDatabase
-    };
+
+    // let guestUserPrompt = Window.
+    // res.send('Please login or register first if you want to see the tiny urls')
+    // window.alert('5');
+    let userId = '';
+    res.render("urls_login", { userId });
   }
   res.render("urls_index", templateVars);
 });
@@ -99,7 +117,7 @@ app.get('/login', (req, res) => {              // *** DONE *** //
 
 app.get("/urls/new", (req, res) => {              // *** DONE *** //
   let templateVars = '';
-  console.log('req.params : ',req.params);
+  console.log('req.params : ', req.params);
   if (req.cookies.userId) {
     templateVars = {
       userId: req.cookies.userId,
@@ -123,14 +141,12 @@ app.get("/urls/:shortURL", (req, res) => {              // *** DONE *** //
       userId: req.cookies.userId,
       email: users[req.cookies.userId].email,
       shortURL: req.params.shortURL,
-      // longURL: urlDatabase[req.params.shortURL]
       longURL: urlNewDatabase[req.params.shortURL].longURL
     };
   } else {
     templateVars = {
       userId: '',
       shortURL: req.params.shortURL,
-      // longURL: urlDatabase[req.params.shortURL]
       longURL: urlNewDatabase[req.params.shortURL].longURL
     };
   }
@@ -187,20 +203,20 @@ app.post("/login", (req, res) => {              // *** DONE *** //
   } else {
     res.status(400);
     res.send('Response : Failure due to mismatch with email or password');
-    // res.redirect("/login")
   }
 });
 
 app.post("/urls/new", (req, res) => {              // *** DONE *** //
   let shortUrl = generateRandomString();
-  console.log('longURL : ',req.body.longURL);
+  console.log('longURL : ', req.body.longURL);
   if (req.cookies.userId) {
-    // urlDatabase[shortUrl] = req.body.longURL
     urlNewDatabase[shortUrl] =
     {
       longURL: req.body.longURL,
-      userId: req.cookies.userId
-    };
+      userID: req.cookies.userId
+    }; 
+    console.log('218');  
+    console.log('urlNewDatabase : ', urlNewDatabase); 
     res.redirect(`/urls/${shortUrl}`);
   } else {
     res.redirect("/login");
@@ -214,15 +230,17 @@ app.post("/urls/new", (req, res) => {              // *** DONE *** //
 // });
 
 app.post(`/urls/:shortURL/delete`, (req, res) => {              // *** DONE *** //
-  // delete urlDatabase[req.params.shortURL]
+  if(req.cookies.userId){
   delete urlNewDatabase[req.params.shortURL];
   res.redirect("/urls");
+}
 });
 
 app.post("/urls/:shortURL", (req, res) => {
-  // urlDatabase[req.params.shortURL] = req.body.longURL;
+  if(req.cookies.userId){
   urlNewDatabase[req.params.shortURL].longURL = req.body.longURL;
   res.redirect(`/urls/${req.params.shortURL}`);
+  }
 });
 
 app.post("/logout", (req, res) => {              // *** DONE *** //
