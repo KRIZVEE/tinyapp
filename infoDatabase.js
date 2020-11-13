@@ -1,9 +1,3 @@
-
-const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
-};
-
 const urlNewDatabase = {
   'b2xVn2': { longURL: "https://www.tsn.ca", userID: "userRandomId" },
   '9sm5xK': { longURL: "https://www.google.ca", userID: "user2RandomId" },
@@ -28,9 +22,9 @@ const users = {
   },
   "ksf123": {
     id: "ksf123",
-    email: "kashifrizvee",
-    password: "$2b$10$7R7GZbxo6LAIFMaLXt0qlOMdt5QA4.GPIp4yKfJGp4D.ckLDdqolS"
-    // password: "simaab5amir"
+    email: "kashifrizvee@gmail.com",
+    password:"$2b$10$cBXgftwfJrcXS5ZWniORlO.EXWeJV8xjrE5WuJ98vrQKP5.AeyCIy"
+    //password: abcd123
   }
 };
 

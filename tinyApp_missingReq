@@ -10,3 +10,21 @@
 curl -X POST -i localhost:8080/urls/xyz345/delete
 
 kashifrizvee1234 | abcd1234
+
+
+abcd -> $2b$10$V5Rieg8MbEXztcGBVi1RP.Xs9XqkqE7.b5YVsIib2Nu51aNFfmh1u
+
+kashifrizvee@gmail.com --> ksf123
+abc123	https://www.bing.ca		
+pqr456	https://www.yahoo.ca		
+xyz345 https://www.ibm.ca
+
+
+email: "user@example.com", --> "userRandomId"
+b2xVn2	https://www.tsn.ca		
+jkl789	https://www.apple.ca
+
+GET /urls/new
+
+  a submit button which makes a POST request to /urls
+ ----> 
