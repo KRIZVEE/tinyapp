@@ -180,7 +180,7 @@ app.post('/register', (req, res) => {
   if (isEmailExist) {
     res.send(`
     <html><body><div><p>Response : Failure due to user email
-     already exists.</p>Please go back to<a href="/login">login</a> 
+     already exists.</p>Please go back to <a href="/login">login</a> 
      page.</div></body></html>\n`);
     return;
   }
