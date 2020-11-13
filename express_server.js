@@ -50,11 +50,14 @@ app.get("/urls", (req, res) => {
     };
     res.render("urls_index", templateVars);
   } else {
-    res.send(`<html><body><div>You are a guest user. <p>I sincerely thank you to visit my page. </p>Please <a href="/register">register</a> or <a href="/login">login</a> to have a wonderful experience</div></body></html>\n`);
+    res.send(`
+    <html><body><div><p>I sincerely thank you to visit my page. 
+    </p>Please <a href="/register">register</a> or 
+    <a href="/login">login</a> to have a wonderful experience</div></body></html>\n`);
   }
 });
 
-app.get("/urls/new", (req, res) => {              // *** Need to work on task 1  *** //
+app.get("/urls/new", (req, res) => {            
   let templateVars = '';
   if (req.session.userId) {
     templateVars = {
@@ -71,7 +74,10 @@ app.get("/urls/new", (req, res) => {              // *** Need to work on task 1 
 app.get("/urls/:shortURL", (req, res) => {              
   let templateVars = '';
   if (!urlNewDatabase[req.params.shortURL] && req.session.userId) {
-    res.send(`<html><body><div><p>Hi, You don't own this. Unfortunately you don't have the right to work on this. </p>Please go back to your homa page or click home <a href="/urls">🏡</a> </div></body></html>\n`);
+    res.send(`<html><body><div><p>Hi, You don't own this. 
+    Unfortunately you don't have the right to work on this. 
+    </p>Please go back to your homa page or click home 
+    <a href="/urls">🏡</a> </div></body></html>\n`);
   } else if (
     req.session.userId
     &&
@@ -84,10 +90,16 @@ app.get("/urls/:shortURL", (req, res) => {
       longURL: urlNewDatabase[req.params.shortURL].longURL
     };
   } else if (req.session.userId) {
-    res.send(`<html><body><div><p>Hi, You don't own this. Unfortunately you don't have the right to work on this. </p>Please go back to your homa page or click home <a href="/urls">🏡</a> </div></body></html>\n`);
+    res.send(`<html><body><div><p>Hi, You don't own this. 
+    Unfortunately you don't have the right to work on this. 
+    </p>Please go back to your homa page or click home 
+    <a href="/urls">🏡</a> </div></body></html>\n`);
   } else {
     req.session = null;
-    res.send(`<html><body><div>You are a guest user. <p>I sincerely thank you to visit my page. </p>Please <a href="/register">register</a> or <a href="/login">login</a> to have a wonderful experience</div></body></html>\n`);
+    res.send(`<html><body><div>You are a guest user. <p>
+    I sincerely thank you to visit my page. </p>Please 
+    <a href="/register">register</a> or <a href="/login">login</a> 
+    to have a wonderful experience</div></body></html>\n`);
   }
   res.render("urls_show", templateVars);
 });
@@ -102,7 +114,14 @@ app.get("/u/:shortURL", (req, res) => {
   if (isShortUrlExist) {
     res.redirect(urlNewDatabase[req.params.shortURL].longURL);
   } else {
-    res.send(`<html><body><div>You are a guest user. <p>I sincerely thank you to visit my page. </p>Please <a href="/register">register</a> or <a href="/login">login</a> to have a wonderful experience</div></body></html>\n`);
+    res.send(`
+    <html><body><div><br><p>Sorry, this short 
+    url does not link to long URL.</p><br>
+    <div>You are a guest user. <p>I sincerely 
+    thank you to visit my page. </p>Please 
+    <a href="/register">register</a> or 
+    <a href="/login">login</a> to have a 
+    wonderful experience</div></div></body></html>\n`);
   }
 });
 
@@ -135,8 +154,10 @@ app.get("/register", (req, res) => {
 app.post("/login", (req, res) => {              
   const { email, password } = req.body;
   if (req.body.email === '' || req.body.password === '') {
-    res.status(400);
-    res.send('Response : Failure due to missing email or password');
+    res.send(`
+    <html><body><div><p>Response : Failure due to missing 
+    email or password </p>Please go back  
+    <a href="/login">login</a> page.</div></body></html>\n`);
   } else if (isEmailPasswordMatches(email, password)) {
     let userId = '';
     for (let key in users) {
@@ -147,21 +168,27 @@ app.post("/login", (req, res) => {
     req.session.userId = userId;
     res.redirect("/urls");
   } else {
-    res.status(400);
-    res.send('Response : Failure due to mismatch with email or password');
+    res.send(`
+    <html><body><div><p>Response : Failure due to mismatch with email
+    or password.</p>Please go back to <a href="/login">login</a> 
+    page.</div></body></html>`);
   }
 });
 
 app.post('/register', (req, res) => {             
   let isEmailExist = getUserByEmail(req.body.email, users);
   if (isEmailExist) {
-    res.status(400);
-    res.send('Response : Failure due to user email already exists. Please login');
+    res.send(`
+    <html><body><div><p>Response : Failure due to user email
+     already exists.</p>Please go back to<a href="/login">login</a> 
+     page.</div></body></html>\n`);
     return;
   }
   if (req.body.email === '' || req.body.password === '') {
-    res.status(400);
-    res.send('Response : Failure due to missing email or password');
+    res.send(`
+    <html><body><div><p>Response : Failure due to missing email or 
+    password.</p>Please try again at 
+    <a href="/register">Register</a> page.</div></body></html>\n`);
     return;
   }
   const userRandId = generateRandomString();
@@ -175,23 +202,6 @@ app.post('/register', (req, res) => {
   res.redirect('/urls');
 });
 
-
-
-/*
-app.post("/urls/new", (req, res) => {              // *** DONE *** //
-  let shortUrl = generateRandomString();//req.session.userId
-  if (req.session.userId) {
-    urlNewDatabase[shortUrl] =
-    {
-      longURL: req.body.longURL,
-      userID: req.session.userId //session
-    };
-    res.redirect(`/urls/${shortUrl}`);
-  } else {
-    res.redirect("/login");
-  }
-});*/
-
 app.post("/urls", (req, res) => {              
   if (req.session.userId) {
     let shortUrl = generateRandomString();
@@ -203,39 +213,56 @@ app.post("/urls", (req, res) => {
     res.redirect(`/urls/${shortUrl}`);
   } else {
     req.session = null;
-    res.send(`<html><body><div>You are a guest user. <p>I sincerely thank you to visit my page. </p>Please <a href="/register">register</a> or <a href="/login">login</a> to have a wonderful experience</div></body></html>\n`);
+    res.send(`<html><body><div>You are a guest user. 
+    <p>I sincerely thank you to visit my page. </p>
+    Please <a href="/register">register</a> or 
+    <a href="/login">login</a> to have a wonderful 
+    experience</div></body></html>\n`);
   }
 });
 
 app.post(`/urls/:shortURL/delete`, (req, res) => {              
   if (!urlNewDatabase[req.params.shortURL] && req.session.userId) {
-    res.send(`<html><body><div><p>Hi, You don't own this. Unfortunately you don't have the right to work on this. </p>Please go back to your homa page or click home <a href="/urls">🏡</a> </div></body></html>\n`);
+    res.send(`<html><body><div><p>Hi, You don't own this. 
+    Unfortunately you don't have the right to work on this. 
+    </p>Please go back to your homa page or click home 
+    <a href="/urls">🏡</a> </div></body></html>\n`);
   } else if (req.session.userId) {
     delete urlNewDatabase[req.params.shortURL];
     res.redirect("/urls");
   } else {
     req.session = null;
-    res.send(`<html><body><div>You are a guest user. <p>I sincerely thank you to visit my page. </p>Please <a href="/register">register</a> or <a href="/login">login</a> to have a wonderful experience</div></body></html>\n`);
+    res.send(`<html><body><div>You are a guest user. 
+    <p>I sincerely thank you to visit my page. </p>
+    Please <a href="/register">register</a> or 
+    <a href="/login">login</a> to have a wonderful experience
+    </div></body></html>\n`);
   }
 });
 
 app.post("/urls/:shortURL", (req, res) => {             
 
   if (!urlNewDatabase[req.params.shortURL] && req.session.userId) {
-    res.send(`<html><body><div><p>Hi, You don't own this. Unfortunately you don't have the right to work on this. </p>Please go back to your homa page or click home <a href="/urls">🏡</a> </div></body></html>\n`);
+    res.send(`<html><body><div><p>Hi, You don't own this. 
+    Unfortunately you don't have the right to work on this. 
+    </p>Please go back to your homa page or click home 
+    <a href="/urls">🏡</a> </div></body></html>\n`);
   } else if (req.session.userId && urlNewDatabase[req.params.shortURL].userID === req.session.userId) {
     urlNewDatabase[req.params.shortURL].longURL = req.body.longURL;
     res.redirect(`/urls`);
   } else {
     req.session = null;
-
-    res.send(`<html><body><div><p>I sincerely thank you to visit my page. </p>You are not authorised to make change in url created by another user. Please \n register http://localhost:8080/register or \n login http://localhost:8080/login</p></div></body></html>\n`);
+    res.send(`
+    <html><body><div><p>I sincerely thank you to visit my page. 
+    </p>You are not authorised to make change in url as a guest user. 
+    Please <a href="/register">Register</a>  or 
+    <a href="/login">Login</a></p></div></body></html>\n`);
   }
 });
 
 app.post("/logout", (req, res) => {              
   req.session = null;
-  res.redirect("/register");
+  res.redirect("/urls");
 });
 
 app.listen(PORT, () => {
